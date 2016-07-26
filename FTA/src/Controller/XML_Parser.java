@@ -80,7 +80,6 @@ public class XML_Parser {
 				// System.out.println(attr.item(j).getNodeName() + " : " +
 				// attr.item(j).getNodeValue());
 				// }
-
 				SDT sdt = new SDT(attr.item(5).getNodeValue(), Integer.parseInt(attr.item(3).getNodeValue()));
 				sdtlist.add(sdt);
 				if (!attr.item(1).getNodeValue().isEmpty()) {

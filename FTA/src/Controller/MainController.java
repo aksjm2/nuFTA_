@@ -11,8 +11,6 @@ public class MainController {
 
 		Variable output = new Variable("testoutput",VariableType.CONSTANT,"1");
 		
-		
-		
 		FaultTreeCreator fc = new FaultTreeCreator();
 		
 		FomulaMaker fm = new FomulaMaker();
