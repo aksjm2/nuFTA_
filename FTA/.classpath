@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/ant.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/ant-junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/ant-launcher.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/ant-nodeps.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/resolver.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/serializer.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/stylebook-1.0-b2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/xalan.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/xml-apis.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KimYongHyun/eclipse/java-mars/eclipse/plugin/xml-commons-external-src.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
