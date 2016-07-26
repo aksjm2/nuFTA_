@@ -12,7 +12,6 @@ import model.Assignment;
 import model.Condition;
 import model.SDT;
 import model.Variable;
-import model.VariableType;
 
 public class XML_Parser {
 	private ArrayList<Variable> typeTableList = new ArrayList<Variable>();
@@ -80,8 +79,9 @@ public class XML_Parser {
 				// System.out.println(attr.item(j).getNodeName() + " : " +
 				// attr.item(j).getNodeValue());
 				// }
+
 				SDT sdt = new SDT(attr.item(5).getNodeValue(), Integer.parseInt(attr.item(3).getNodeValue()));
-				sdtlist.add(sdt);
+				this.sdtlist.add(sdt);
 				if (!attr.item(1).getNodeValue().isEmpty()) {
 					String[] constants = attr.item(1).getNodeValue().split("; ");
 					for (int j = 0; j < constants.length; j++) {
@@ -142,76 +142,148 @@ public class XML_Parser {
 										.parseInt(value.item(0).getNodeValue())] = value.item(2).getNodeValue();
 							}
 						}
-					} else if (con.getNodeName().equals("action")) {				
+					} else if (con.getNodeName().equals("action")) {
 						NodeList cellList = con.getChildNodes();
 						NamedNodeMap rowCol = con.getAttributes();
 						int nRow = Integer.parseInt(rowCol.item(1).getNodeValue());
 						int nCol = Integer.parseInt(rowCol.item(0).getNodeValue());
-						
+
 						String[][] actionTable = new String[nRow][nCol];
-						
-						ArrayList<Node> realCell = new ArrayList<Node>();
+
 						for (int k = 0; k < cellList.getLength(); k++) {
 							Node cell = cellList.item(k);
 							if (cell.getNodeName().equals("cell")) {
-								realCell.add(cell);
 								NamedNodeMap value = cell.getAttributes();
-								actionTable[Integer.parseInt(value.item(1).getNodeValue())][Integer.parseInt(value.item(0).getNodeValue())] = value.item(2).getNodeValue();
+								actionTable[Integer.parseInt(value.item(1).getNodeValue())][Integer
+										.parseInt(value.item(0).getNodeValue())] = value.item(2).getNodeValue();
 							}
 						}
-						
-						for(int k = 0; k < actionTable.length; k++)
-						{
-							for(int l = 1; l <actionTable[k].length; l++)
-							{
-								if(actionTable[k][l].equals("O") || actionTable[k][l].equals("o"))
-								{
+
+						for (int k = 0; k < actionTable.length; k++) {
+							for (int l = 1; l < actionTable[k].length; l++) {
+								if (actionTable[k][l].equals("O") || actionTable[k][l].equals("o")) {
 									Variable output = null;
 									String[] outputString = actionTable[k][0].split(" := ");
 
-									if (outputString[1].equals("true") || outputString[1].equals("false")) {
-										output = new Variable(outputString[0], 2, outputString[1]);
+									String temp = outputString[1];
+									if (temp.startsWith(" ")) {
+										temp = temp.substring(1, temp.length());
+									}
+
+									if (temp.equals("true") || temp.equals("false")) {
+										output = new Variable(outputString[0], 2, temp);
 									} else {
-										String[] checkType = outputString[1].split("_");
+
+										String[] checkType = temp.split("_");
+
 										if (checkType[checkType.length - 1].startsWith("t")) {
 											ArrayList<Variable> varList = sdt.getVariables();
 											for (int m = 0; m < varList.size(); m++) {
-												if (varList.get(m).getName().equals(outputString[1])) {
-													output = new Variable(outputString[0], 1, varList.get(m).getMax(), varList.get(m).getMin());
+												if (varList.get(m).getName().equals(temp)) {
+													output = new Variable(outputString[0], 1, varList.get(m).getMax(),
+															varList.get(m).getMin());
 													break;
 												}
 											}
-										}else if (checkType[0].startsWith("k")) {
+										} else if (checkType[0].startsWith("k")) {
 											ArrayList<Variable> varList = sdt.getVariables();
 											for (int m = 0; m < varList.size(); m++) {
-												if (varList.get(m).getName().equals(outputString[1])) {
-													output = new Variable(outputString[0], VariableType.CONSTANT, varList.get(m).getValue());
+												if (varList.get(m).getName().equals(temp)) {
+													output = new Variable(outputString[0], 0, varList.get(m).getMax(),
+															varList.get(m).getMin());
 													break;
 												}
 											}
 										} else {
-											for (int m = 0; m < typeTableList.size(); m++) {
-												if (typeTableList.get(m).getName().equals(outputString[1])) {
-													output = new Variable(outputString[0], 1, typeTableList.get(m).getMax(),typeTableList.get(m).getMin());
-													break;
+											if (temp.matches(".*\\-.*")) {
+												String[] minus = temp.split(" - ");
+
+												if (minus.length == 1) {
+													for (int m = 0; m < typeTableList.size(); m++) {
+														if (typeTableList.get(m).getName().equals(temp)) {
+															output = new Variable(outputString[0], 1,
+																	typeTableList.get(m).getMax(),
+																	typeTableList.get(m).getMin());
+															break;
+														}
+													}
+												} else {
+													for (int m = 0; m < typeTableList.size(); m++) {
+														if (typeTableList.get(m).getName().equals(minus[0])) {
+															output = new Variable(outputString[0], 1,
+																	typeTableList.get(m).getMax(),
+																	typeTableList.get(m).getMin());
+															break;
+														}
+													}
+													ArrayList<Variable> varList = sdt.getVariables();
+													for (int m = 0; m < varList.size(); m++) {
+														if (varList.get(m).getName().equals(minus[1])) {
+															output.setMax(output.getMax() - varList.get(m).getMax());
+															output.setMin(output.getMin() - varList.get(m).getMin());
+															if (output.getMin() < 0) {
+																output.setMin(0);
+															}
+															break;
+														}
+													}
+												}
+											} else if (temp.matches(".*\\+.*")) {
+												String[] plus = temp.split(" \\+ ");
+
+												if (plus.length == 1) {
+													for (int m = 0; m < typeTableList.size(); m++) {
+														if (typeTableList.get(m).getName().equals(temp)) {
+															output = new Variable(outputString[0], 1,
+																	typeTableList.get(m).getMax(),
+																	typeTableList.get(m).getMin());
+															break;
+														}
+													}
+												} else {
+													for (int m = 0; m < typeTableList.size(); m++) {
+														if (typeTableList.get(m).getName().equals(plus[0])) {
+															output = new Variable(outputString[0], 1,
+																	typeTableList.get(m).getMax(),
+																	typeTableList.get(m).getMin());
+															break;
+														}
+													}
+													ArrayList<Variable> varList = sdt.getVariables();
+													for (int m = 0; m < varList.size(); m++) {
+														if (varList.get(m).getName().equals(plus[1])) {
+															output.setMax(output.getMax() + varList.get(m).getMax());
+															output.setMin(output.getMin() + varList.get(m).getMin());
+															break;
+														}
+													}
+												}
+											} else {
+												for (int m = 0; m < typeTableList.size(); m++) {
+													if (typeTableList.get(m).getName().equals(temp)) {
+														output = new Variable(outputString[0], 1,
+																typeTableList.get(m).getMax(),
+																typeTableList.get(m).getMin());
+														break;
+													}
 												}
 											}
 										}
 									}
-									System.out.println("!!"+output.getName());
 									Assignment assignment = new Assignment(output);
-									
+									System.out.println(output.getName());
 									for (int m = 0; m < conditionTable.length; m++) {
 										Condition condition = new Condition(conditionTable[m][0], true);
 										if (conditionTable[m][l].equals("F")) {
 											condition.setNot(false);
 										}
-										assignment.addCondition(condition);										
+										assignment.addCondition(condition);
 									}
 									sdt.addAssignment(assignment);
 								}
 							}
 						}
+
 					}
 				}
 
@@ -232,4 +304,5 @@ public class XML_Parser {
 	public void setSdtlist(ArrayList<SDT> sdtlist) {
 		this.sdtlist = sdtlist;
 	}
+
 }

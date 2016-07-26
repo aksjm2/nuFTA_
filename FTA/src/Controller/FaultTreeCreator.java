@@ -10,6 +10,7 @@ import model.SDT;
 import model.FSM;
 import model.TTS;
 import model.Assignment;
+import model.Condition;
 
 public class FaultTreeCreator {
 	
@@ -179,7 +180,11 @@ public class FaultTreeCreator {
 		FaultTreeNode and = new FaultTreeNode("&",GateType.AND);
 		tRoot.addChild(and);
 		for(int i=0; i<tassign.getConditions().size(); i++){
-			FaultTreeNode temp = conditionToLogic(node,output,tassign.getConditions().get(i).getRawCondition());
+			Condition tcond = tassign.getConditions().get(i);
+			if(tcond.isNot()){
+				tcond.setRawCondition(this.notTranslation(tcond.getRawCondition()));
+			}
+			FaultTreeNode temp = conditionToLogic(node,output,tcond.getRawCondition());
 			and.addChild(temp);
 			temp.setParent(and);
 		}
