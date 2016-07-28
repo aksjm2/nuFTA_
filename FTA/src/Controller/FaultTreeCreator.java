@@ -108,10 +108,18 @@ public class FaultTreeCreator {
 					result = new Variable(text.substring(0,i),VariableType.CONSTANT,text.substring(i));
 				}
 				else if(text.charAt(i) == '>'){
+					try{
 					result = new Variable(text.substring(0,i),VariableType.RANGE,0,Integer.parseInt(text.substring(i+2)));
+					}catch(NumberFormatException e){
+						result = new Variable(text.substring(0,i),VariableType.RANGE,0,-1);
+					}
 				}
 				else if(text.charAt(i) == '<'){
-					result = new Variable(text.substring(0,i),VariableType.RANGE,Integer.parseInt(text.substring(i+2)),0);
+					try{
+						result = new Variable(text.substring(0,i),VariableType.RANGE,Integer.parseInt(text.substring(i+2)),0);
+					}catch(NumberFormatException e){
+						result = new Variable(text.substring(0,i),VariableType.RANGE,0,-1);
+					}
 				}else{
 					result = new Variable(text.substring(0,i),-1,text.substring(i));
 				}

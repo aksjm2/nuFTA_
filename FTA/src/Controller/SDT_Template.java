@@ -17,9 +17,6 @@ public class SDT_Template {
 		or.setParent(root);
 		for(int i=0; i<sdt.getAssignments().size(); i++){
 			Assignment tassign = sdt.getAssignments().get(i);
-			tassign.getOutput();
-			tassign.getOutput().getName();
-			tassign.getOutput().getType();
 			if(tassign.getOutput().getType()==VariableType.CONSTANT){
 				if(output.getType()==VariableType.CONSTANT){
 					if(tassign.getOutput().getValue().equals(output.getValue())){
@@ -63,6 +60,12 @@ public class SDT_Template {
 							temp.setParent(or);
 						}
 					}
+				}
+			}else{
+				if(tassign.getOutput().getValue().equals(output.getValue())){
+					FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+					or.addChild(temp);
+					temp.setParent(or);
 				}
 			}
 		}
