@@ -6,6 +6,7 @@ public class IONode extends Node{
 	private boolean isInput;
 	private Variable value;
 	
+	public IONode(){}
 	public IONode(String name, int id){
 		super(name, id);
 	}

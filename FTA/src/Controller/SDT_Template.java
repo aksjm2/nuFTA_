@@ -9,61 +9,63 @@ import model.Variable;
 import model.VariableType;
 
 public class SDT_Template {
-	
-	public void sdt_template(FaultTreeNode root, Variable output, SDT sdt){
+
+	public void sdt_template(FaultTreeNode root, Variable output, SDT sdt) {
 		FaultTreeCreator ft = new FaultTreeCreator();
-		FaultTreeNode or = new FaultTreeNode("|",GateType.OR);
+		FaultTreeNode or = new FaultTreeNode("|", GateType.OR);
 		root.addChild(or);
 		or.setParent(root);
-		for(int i=0; i<sdt.getAssignments().size(); i++){
+		for (int i = 0; i < sdt.getAssignments().size(); i++) {
 			Assignment tassign = sdt.getAssignments().get(i);
-			if(tassign.getOutput().getType()==VariableType.CONSTANT){
-				if(output.getType()==VariableType.CONSTANT){
-					if(tassign.getOutput().getValue().equals(output.getValue())){
-						FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+			if (tassign.getOutput().getType() == VariableType.CONSTANT) {
+				if (output.getType() == VariableType.CONSTANT) {
+					if (tassign.getOutput().getValue().equals(output.getValue())) {
+						FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 						or.addChild(temp);
 						temp.setParent(or);
 					}
-				}else if(output.getType()==VariableType.RANGE){
-					if(output.getMin()<=Integer.parseInt(tassign.getOutput().getValue()) && output.getMax()>=Integer.parseInt(tassign.getOutput().getValue())){
-						FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+				} else if (output.getType() == VariableType.RANGE) {
+					if (output.getMin() <= Integer.parseInt(tassign.getOutput().getValue())
+							&& output.getMax() >= Integer.parseInt(tassign.getOutput().getValue())) {
+						FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 						or.addChild(temp);
 						temp.setParent(or);
 					}
 				}
-			}else if(tassign.getOutput().getType()==VariableType.RANGE){
-				if(output.getType()==VariableType.CONSTANT){
-					if(tassign.getOutput().getMin()<=Integer.parseInt(output.getValue()) && tassign.getOutput().getMax()>=Integer.parseInt(output.getValue())){
+			} else if (tassign.getOutput().getType() == VariableType.RANGE) {
+				if (output.getType() == VariableType.CONSTANT) {
+					if (tassign.getOutput().getMin() <= Integer.parseInt(output.getValue())
+							&& tassign.getOutput().getMax() >= Integer.parseInt(output.getValue())) {
 						tassign.getOutput().setType(VariableType.CONSTANT);
 						tassign.getOutput().setMax(-1);
 						tassign.getOutput().setMin(-1);
 						tassign.getOutput().setValue(output.getValue());
-						
-						FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+
+						FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 						or.addChild(temp);
 						temp.setParent(or);
 					}
-				}else if(output.getType()==VariableType.RANGE){
-					if(output.getMin()>=tassign.getOutput().getMin()){
+				} else if (output.getType() == VariableType.RANGE) {
+					if (output.getMin() >= tassign.getOutput().getMin()) {
 						tassign.getOutput().setMin(output.getMin());
-						if(output.getMax()<=tassign.getOutput().getMax()){
-							tassign.getOutput().setMax(output.getMax());	
+						if (output.getMax() <= tassign.getOutput().getMax()) {
+							tassign.getOutput().setMax(output.getMax());
 						}
-						FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+						FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 						or.addChild(temp);
 						temp.setParent(or);
-					}else{
-						if(output.getMax()<=tassign.getOutput().getMax()){
+					} else {
+						if (output.getMax() <= tassign.getOutput().getMax()) {
 							tassign.getOutput().setMax(output.getMax());
-							FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+							FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 							or.addChild(temp);
 							temp.setParent(or);
 						}
 					}
 				}
-			}else{
-				if(tassign.getOutput().getValue().equals(output.getValue())){
-					FaultTreeNode temp = ft.conditionGenerateNode((Node)sdt,output,tassign);
+			} else {
+				if (output.getType() == VariableType.BOOL) {
+					FaultTreeNode temp = ft.conditionGenerateNode((Node) sdt, output, tassign);
 					or.addChild(temp);
 					temp.setParent(or);
 				}

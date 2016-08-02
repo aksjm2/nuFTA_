@@ -20,6 +20,7 @@ public class Variable {
 		this.type = type;
 		this.max = max;
 		this.min = min;
+		this.value = " ";
 	}
 	public String getName() {
 		return name;

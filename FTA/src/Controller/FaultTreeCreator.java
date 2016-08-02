@@ -23,9 +23,9 @@ public class FaultTreeCreator {
 	}
 	
 	public FaultTreeNode makeTree(Variable output, Node node){
-		FaultTreeNode root = new FaultTreeNode("root");
+		FaultTreeNode root = new FaultTreeNode(output.getName());
 		root.setVariable(output);
-		
+	
 		if(node instanceof SDT){
 			s_template.sdt_template(root,output,(SDT)node);
 		}
@@ -108,18 +108,10 @@ public class FaultTreeCreator {
 					result = new Variable(text.substring(0,i),VariableType.CONSTANT,text.substring(i));
 				}
 				else if(text.charAt(i) == '>'){
-					try{
 					result = new Variable(text.substring(0,i),VariableType.RANGE,0,Integer.parseInt(text.substring(i+2)));
-					}catch(NumberFormatException e){
-						result = new Variable(text.substring(0,i),VariableType.RANGE,0,-1);
-					}
 				}
 				else if(text.charAt(i) == '<'){
-					try{
-						result = new Variable(text.substring(0,i),VariableType.RANGE,Integer.parseInt(text.substring(i+2)),0);
-					}catch(NumberFormatException e){
-						result = new Variable(text.substring(0,i),VariableType.RANGE,0,-1);
-					}
+					result = new Variable(text.substring(0,i),VariableType.RANGE,Integer.parseInt(text.substring(i+2)),0);
 				}else{
 					result = new Variable(text.substring(0,i),-1,text.substring(i));
 				}
